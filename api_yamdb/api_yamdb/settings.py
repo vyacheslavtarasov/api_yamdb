@@ -16,12 +16,14 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 5,
-} 
+}
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # 'api.apps.ApiConfig',
+    # 'reviews.apps.ReviewsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,10 +32,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Добавили DRF for API & auth token
     'rest_framework',
+    'rest_framework_simplejwt',
     'djoser',
     # Добавили приложения
     'reviews',
     'api',
+
 ]
 
 MIDDLEWARE = [
@@ -135,3 +139,9 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+
+# Пользовательские роли пользователей
+USER = 'user'
+MODERATOR = 'moderator'
+ADMIN = 'admin'
