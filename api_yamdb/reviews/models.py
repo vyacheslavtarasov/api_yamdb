@@ -1,11 +1,58 @@
+# from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
 class User(AbstractUser):
-    bio = models.TextField(blank=True)
-    role = models.CharField(max_length=200)  # нет таблицы для ролей...
-    # почта и другие поля
+    """Модель переопределенного юзера."""
+    ROLE_CHOICES = [
+        ('user', 'user'),
+        ('moderator', 'moderator'),
+        ('admin', 'admin'),
+    ]
+    username = models.CharField(
+        'Имя пользователя',
+        max_length=150,
+        unique=True,
+        # validators=[username_validator],
+    )
+    first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
+    email = models.EmailField(
+        blank=True,
+        max_length=254,
+        unique=True,
+        verbose_name='email address',
+    )
+    role = models.CharField(
+        verbose_name='Пользовательская роль',
+        choices=ROLE_CHOICES,
+        default='user',
+        max_length=50)
+    bio = models.TextField('Биография', blank=True)
+    confirmation_code = models.CharField(
+        'Код подтверждения пользователя',
+        max_length=100,
+        null=True
+    )
+
+    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELDS = 'email'
+
+    def __str__(self):
+        return str(self.username)
+
+    @property
+    def is_admin(self):
+        return self.role == "admin" or self.is_superuser
+
+    @property
+    def is_moderator(self):
+        return self.role == "moderator"
+
+    @property
+    def is_user(self):
+        return self.role == "user"
 
 
 class Category(models.Model):
