@@ -1,7 +1,10 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from api.views import ReviewsViewSet
+from api.views import (
+    ReviewsViewSet,
+    CommentsViewSet
+)
 
 
 app_name = "api"
@@ -9,6 +12,9 @@ app_name = "api"
 router = routers.DefaultRouter(trailing_slash=True)
 router.register(
     r"titles/(?P<title_id>\d+)/reviews", ReviewsViewSet, basename="reviews"
+)
+router.register(
+    r"titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments", CommentsViewSet, basename="comments"
 )
 
 urlpatterns = [
