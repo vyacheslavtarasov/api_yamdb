@@ -22,8 +22,8 @@ class Category(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Категория',
-        verbose_name_plural = 'Категории',
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
     def __str__(self):
         return self.name
@@ -43,8 +43,8 @@ class Genre(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Жанр',
-        verbose_name_plural = 'Жанры',
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
 
     def __str__(self):
         return self.name
@@ -66,13 +66,15 @@ class Titles(models.Model):
         blank=True,
         null=True,
     )
-    # genres = models.ManyToManyField(
-    #    Genre,
-    # )
+    genre = models.ManyToManyField(
+        Genre,
+        related_name='titles',
+        verbose_name='Жанр'
+    )
 
     class Meta:
-        verbose_name = 'Произведение',
-        verbose_name_plural = 'Произведения',
+        verbose_name = 'Произведение'
+        verbose_name_plural = 'Произведения'
 
     def __str__(self):
         return self.name
@@ -96,8 +98,8 @@ class Review(models.Model):
     pub_date = models.DateTimeField()
 
     class Meta:
-        verbose_name = 'Произведение',
-        verbose_name_plural = 'Произведения',
+        verbose_name = 'Ревью'
+        verbose_name_plural = 'Ревью'
 
     def __str__(self):
         return self.text
@@ -118,8 +120,8 @@ class Comments(models.Model):
     pub_date = models.DateTimeField()
 
     class Meta:
-        verbose_name = 'Комментарий',
-        verbose_name_plural = 'Комментарии',
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
 
     def __str__(self):
         return self.text
