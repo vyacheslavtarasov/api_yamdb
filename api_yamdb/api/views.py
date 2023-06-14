@@ -1,18 +1,22 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
+from rest_framework.filters import SearchFilter
 
 from reviews.models import (
     Review,
     Comments,
     Titles,
-    User
+    User,
+    Genre,
 )
 
 from rest_framework.pagination import PageNumberPagination
 from api.serializers import (
     ReviewSerializer,
-    CommentsSerializer
+    CommentsSerializer,
+    GenreSerializer,
 )
+# from .permissions import IsAdminUserOrReadOnly
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):
@@ -58,3 +62,12 @@ class CommentsViewSet(viewsets.ModelViewSet):
             review_id=get_object_or_404(Review, id=self.kwargs.get("review_id")),
             author=get_object_or_404(User, username=self.request.user),
         )
+
+
+class GenreViewSet(viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    #permission_classes = (IsAdminUserOrReadOnly,)
+    filter_backends = (SearchFilter,)
+    search_fields = ('name', )
+    lookup_field = 'slug'
