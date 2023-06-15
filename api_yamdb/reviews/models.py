@@ -106,6 +106,7 @@ class Titles(models.Model):
         # Так как у нас будет csv здесь будет index БД
     )
     year = models.DateTimeField('Дата произведения')
+    description = models.TextField()
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
