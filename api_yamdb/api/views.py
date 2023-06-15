@@ -1,7 +1,7 @@
 # from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
-from rest_framework import viewsets, status
+from rest_framework import permissions, viewsets, status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from authorization.send_confirmation_code import send_mail_code
 # from django.db.models import Avg
 # from django_filters.rest_framework import DjangoFilterBackend
+
+from api.permissions import IsAuthor
 
 from reviews.models import (
     Review,
@@ -58,6 +60,8 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     pagination_class = PageNumberPagination
 
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor) 
+
     def get_queryset(self):
         new_queryset = Review.objects.filter(title_id=self.kwargs.get("title_id"))
         return new_queryset
@@ -78,10 +82,11 @@ class ReviewsViewSet(viewsets.ModelViewSet):
 class CommentsViewSet(viewsets.ModelViewSet):
     serializer_class = CommentsSerializer
 
-    pagination_class = PageNumberPagination 
+    pagination_class = PageNumberPagination
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor)
 
     def get_queryset(self):
-        print(self.kwargs.get("review_id"))
+        # print(self.kwargs.get("review_id"))
         new_queryset = Comments.objects.filter(review_id=self.kwargs.get("review_id"))
         return new_queryset
     
