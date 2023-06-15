@@ -16,8 +16,8 @@ class User(AbstractUser):
         unique=True,
         # validators=[username_validator],
     )
-    first_name = models.CharField(max_length=150, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
+    first_name = models.CharField(max_length=150, null=True)
+    last_name = models.CharField(max_length=150, null=True)
     email = models.EmailField(
         blank=True,
         max_length=254,
@@ -29,7 +29,7 @@ class User(AbstractUser):
         choices=ROLE_CHOICES,
         default='user',
         max_length=50)
-    bio = models.TextField('Биография', blank=True)
+    bio = models.TextField('Биография', null=True)
     confirmation_code = models.CharField(
         'Код подтверждения пользователя',
         max_length=100,

@@ -22,9 +22,7 @@ from api.serializers import (
     ReviewSerializer,
     CommentsSerializer,
     GenreSerializer,
-
-    SignUpSerializer
-
+    SignUpSerializer,
     CategorySerializer,
   
 )
