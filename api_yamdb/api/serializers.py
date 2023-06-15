@@ -11,7 +11,7 @@ from reviews.models import (
     Category,
     username_me
 )
-from reviews.validators import UsernameValidatorRegex
+from reviews.validators import UsernameValidatorRegex, username_me
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -32,6 +32,22 @@ class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email')
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    """Сериализатор получения JWT-токена."""
+    username = serializers.CharField(
+        required=True,
+        validators=(UsernameValidatorRegex(), )
+    )
+    confirmation_code = serializers.CharField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'confirmation_code')
+
+    def validate_username(self, value):
+        return username_me(value)
 
 
 class ReviewSerializer(serializers.ModelSerializer):

@@ -6,9 +6,9 @@ from django.core.mail import send_mail
 random = secrets.SystemRandom()
 
 
-def send_mail_code(data_code):
+def send_mail_code(data):
     """Отправка на почту сгенерированного рандомного кода."""
-    email = data_code
+    email = data['email']
     confirmation_code = random.randint(
         settings.MIN_CONFIRMATION_CODE,
         settings.MAX_CONFIRMATION_CODE,
