@@ -18,17 +18,24 @@ from reviews.validators import UsernameValidatorRegex, username_me
 class SignUpSerializer(serializers.ModelSerializer):
     """Сериализатор формы регистрации.POST-запрос: username и email."""
     email = serializers.EmailField(
+        max_length=150,
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
     username = serializers.CharField(
+        max_length=150,
         required=True,
         validators=[UsernameValidatorRegex(), ]
     )
 
-    def validate_username(self, value):
-        """Проверка имени пользователя (me недопустимое имя)."""
-        return username_me(value)
+    def validate(self, data):
+        if data['username'] == 'me':
+            raise serializers.ValidationError('Нельзя использовать логин me')
+        return data
+
+    # def validate_username(self, value):
+    #     """Проверка имени пользователя (me недопустимое имя)."""
+    #     return username_me(value)
 
     class Meta:
         model = User
@@ -38,6 +45,7 @@ class SignUpSerializer(serializers.ModelSerializer):
 class TokenSerializer(serializers.ModelSerializer):
     """Сериализатор получения JWT-токена."""
     username = serializers.CharField(
+        max_length=150,
         required=True,
         validators=(UsernameValidatorRegex(), )
     )
