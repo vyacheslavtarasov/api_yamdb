@@ -1,14 +1,21 @@
-# from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
-from rest_framework import permissions, viewsets, status
-from rest_framework.filters import SearchFilter, OrderingFilter
+
+from rest_framework import viewsets, status
+from rest_framework.filters import SearchFilter
+
+from rest_framework import viewsets, status
+from rest_framework.filters import SearchFilter
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 # from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import AccessToken
 from authorization.send_confirmation_code import send_mail_code
+
 # from django.db.models import Avg
 # from django_filters.rest_framework import DjangoFilterBackend
+
 
 from api.permissions import IsAuthor
 
@@ -28,8 +35,12 @@ from api.serializers import (
     GenreSerializer,
     SignUpSerializer,
     CategorySerializer,
+
+    TokenSerializer,
+
     TitlesReadSerializer,
     TitlesWriteSerializer,
+
 )
 # from .permissions import IsAdminUserOrReadOnly
 
@@ -54,6 +65,22 @@ def signup_cust(request):
     user.confirmation_code = send_mail_code(request.data)
     user.save()
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def get_token(request):
+    serializer = TokenSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    username = serializer.validated_data['username']
+    # user = get_object_or_404(User, username=username)
+    confirmation_code = serializer.validated_data['confirmation_code']
+
+    user_token = get_object_or_404(User, username=username)
+    if confirmation_code == user_token.confirmation_code:
+        token = str(AccessToken.for_user(user_token))
+        return Response({'token((JWT-токен))': token},
+                        status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):
