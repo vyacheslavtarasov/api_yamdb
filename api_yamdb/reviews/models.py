@@ -108,7 +108,7 @@ class Titles(models.Model):
         max_length=200,
         # Так как у нас будет csv здесь будет index БД
     )
-    year = models.DateTimeField('Дата произведения')
+    year = models.IntegerField()
     description = models.TextField()
     category = models.ForeignKey(
         Category,
@@ -137,20 +137,21 @@ class Review(models.Model):
     title_id = models.ForeignKey(
         Titles,
         on_delete=models.CASCADE,
-        related_name="titles"
+        related_name="reviews"
     )
     text = models.TextField()
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="user"
+        related_name="reviews"
     )
-    score = models.IntegerField()
+    score = models.IntegerField(choices=[(i, i) for i in range(1, 11)])
     pub_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Ревью'
         verbose_name_plural = 'Ревью'
+        unique_together = (("title_id", "author"),)
 
     def __str__(self):
         return self.text

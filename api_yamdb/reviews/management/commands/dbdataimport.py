@@ -33,7 +33,7 @@ import_template = [
         "reviews_titles",
         {"category": "category_id"},
         [("description", "change_me"),],
-        [("year", "%Y")],
+        [],
     ),
     (
         "users",
