@@ -91,14 +91,16 @@ class CommentsSerializer(serializers.ModelSerializer):
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = "__all__"
+        # fields = "__all__"
         model = Genre
+        fields = ['name', 'slug']
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        fields = "__all__"
+        # fields = "__all__"
         model = Category
+        fields = ['name', 'slug']
 
 
 class TitlesReadSerializer(serializers.ModelSerializer):

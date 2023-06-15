@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.filters import SearchFilter
+from api.permissions import IsAuthor
 
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
@@ -148,6 +149,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    pagination_class = PageNumberPagination
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor)
     #permission_classes = (IsAdminUserOrReadOnly,)
     filter_backends = (SearchFilter, )
     lookup_field = 'slug'
