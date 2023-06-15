@@ -2,11 +2,13 @@
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from rest_framework import viewsets, status
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 # from rest_framework.views import APIView
 from authorization.send_confirmation_code import send_mail_code
+# from django.db.models import Avg
+from django_filters.rest_framework import DjangoFilterBackend
 
 from reviews.models import (
     Review,
@@ -24,7 +26,8 @@ from api.serializers import (
     GenreSerializer,
     SignUpSerializer,
     CategorySerializer,
-  
+    TitlesReadSerializer,
+    TitlesWriteSerializer,
 )
 # from .permissions import IsAdminUserOrReadOnly
 
@@ -96,6 +99,9 @@ class CommentsViewSet(viewsets.ModelViewSet):
 
 
 class GenreViewSet(viewsets.ModelViewSet):
+    """
+    Получить список всех жанров.
+    """
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     #permission_classes = (IsAdminUserOrReadOnly,)
@@ -113,3 +119,19 @@ class CategoryViewSet(viewsets.ModelViewSet):
     #permission_classes = (IsAdminUserOrReadOnly,)
     filter_backends = (SearchFilter, )
     lookup_field = 'slug'
+
+
+class TitlesViewSet(viewsets.ModelViewSet):
+    """
+    Получить список всех объектов.
+    """
+    #queryset = Titles.objects.annotate(rating=Avg("reviews__score"))
+    queryset = Titles.objects.all()
+    #permission_classes = (IsAdminUserOrReadOnly, )
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    ordering_fields = ("name",)
+
+    def get_serializer_class(self):
+        if self.action in ("list", "retrieve"):
+            return TitlesReadSerializer
+        return TitlesWriteSerializer
