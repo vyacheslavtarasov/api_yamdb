@@ -34,12 +34,12 @@ def signup_cust(request):
     """Регистрация пользователя."""
     serializer = SignUpSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    email = serializer.validated_data['email']
-    username = serializer.validate_data['username']
+    # email = serializer.validated_data['email']
+    # username = serializer.validated_data['username']
     try:
-        user = User.objects.get_or_create(
-            email=email,
-            username=username,
+        user, _ = User.objects.get_or_create(
+            username=serializer.validated_data.get('username'),
+            email=serializer.validated_data.get('email')
         )
     except IntegrityError:
         return Response(
