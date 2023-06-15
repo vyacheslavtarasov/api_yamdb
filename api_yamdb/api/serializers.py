@@ -7,7 +7,11 @@ from reviews.models import (
     Review,
     Comments,
     Genre,
+
     User
+
+    Category,
+
 )
 
 
@@ -69,3 +73,9 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = Genre
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = "__all__"
+        model = Category
