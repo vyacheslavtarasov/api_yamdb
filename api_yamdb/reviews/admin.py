@@ -31,7 +31,8 @@ class TitlesAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "year",
-        "category"
+        "category",
+        "description"
     )
 
 
