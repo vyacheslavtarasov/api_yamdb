@@ -8,7 +8,7 @@ from rest_framework.response import Response
 # from rest_framework.views import APIView
 from authorization.send_confirmation_code import send_mail_code
 # from django.db.models import Avg
-from django_filters.rest_framework import DjangoFilterBackend
+# from django_filters.rest_framework import DjangoFilterBackend
 
 from reviews.models import (
     Review,
@@ -128,7 +128,7 @@ class TitlesViewSet(viewsets.ModelViewSet):
     #queryset = Titles.objects.annotate(rating=Avg("reviews__score"))
     queryset = Titles.objects.all()
     #permission_classes = (IsAdminUserOrReadOnly, )
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    # filter_backends = (DjangoFilterBackend, OrderingFilter)
     ordering_fields = ("name",)
 
     def get_serializer_class(self):
