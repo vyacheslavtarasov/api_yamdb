@@ -1,12 +1,11 @@
-from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 
-from rest_framework import viewsets, status, response
+from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
 
 from rest_framework import viewsets, status
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.filters import SearchFilter
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -70,20 +69,16 @@ def signup_cust(request):
 def get_token(request):
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    username = serializer.validated_data.get('username')
-    user = get_object_or_404(User, username=username)
-    confirmation_code = serializer.validated_data.get(
-        'confirmation_code'
-    )
-    if default_token_generator.check_token(user, confirmation_code):
-        token = AccessToken.for_user(user)
-        return response.Response(
-            {'token': str(token)}, status=status.HTTP_200_OK
-        )
-    return response.Response(
-        {'confirmation_code': 'Неверный код подтверждения!'},
-        status=status.HTTP_400_BAD_REQUEST
-    )
+    username = serializer.validated_data['username']
+    # user = get_object_or_404(User, username=username)
+    confirmation_code = serializer.validated_data['confirmation_code']
+
+    user_token = get_object_or_404(User, username=username)
+    if confirmation_code == user_token.confirmation_code:
+        token = str(AccessToken.for_user(user_token))
+        return Response({'token((JWT-токен))': token},
+                        status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):

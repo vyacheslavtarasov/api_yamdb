@@ -10,10 +10,11 @@ from api.views import (
     CategoryViewSet,
 
     get_token,
-  
+    
     TitlesViewSet,
 
 )
+
 
 app_name = "api"
 
