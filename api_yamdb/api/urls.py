@@ -8,7 +8,11 @@ from api.views import (
     GenreViewSet,
     signup_cust,
     CategoryViewSet,
+
+    get_token,
+  
     TitlesViewSet,
+
 )
 
 app_name = "api"
@@ -28,6 +32,6 @@ router.register(r"titles", TitlesViewSet, basename="title")
 
 urlpatterns = [
     path("v1/", include(router.urls)),
-    path('v1/auth/signup/', signup_cust, name='signup_cust')
-
+    path('v1/auth/signup/', signup_cust, name='signup_cust'),
+    path('v1/auth/token/', get_token, name='get_token')
 ]
