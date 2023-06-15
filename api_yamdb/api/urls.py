@@ -6,6 +6,7 @@ from api.views import (
     ReviewsViewSet,
     CommentsViewSet,
     GenreViewSet,
+    CategoryViewSet,
 )
 
 app_name = "api"
@@ -19,6 +20,7 @@ router.register(
     r"titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments", CommentsViewSet, basename="comments"
 )
 router.register(r"genres", GenreViewSet, basename="genre")
+router.register(r"categories", CategoryViewSet, basename="category")
 
 urlpatterns = [
     path("v1/", include(router.urls)),

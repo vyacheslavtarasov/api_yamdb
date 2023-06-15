@@ -8,6 +8,7 @@ from reviews.models import (
     Titles,
     User,
     Genre,
+    Category,
 )
 
 from rest_framework.pagination import PageNumberPagination
@@ -15,6 +16,7 @@ from api.serializers import (
     ReviewSerializer,
     CommentsSerializer,
     GenreSerializer,
+    CategorySerializer,
 )
 # from .permissions import IsAdminUserOrReadOnly
 
@@ -70,4 +72,15 @@ class GenreViewSet(viewsets.ModelViewSet):
     #permission_classes = (IsAdminUserOrReadOnly,)
     filter_backends = (SearchFilter,)
     search_fields = ('name', )
+    lookup_field = 'slug'
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    """
+    Получить список всех категорий.
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    #permission_classes = (IsAdminUserOrReadOnly,)
+    filter_backends = (SearchFilter, )
     lookup_field = 'slug'
