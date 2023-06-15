@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -71,7 +72,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api_yamdb.wsgi.application'
 
-
+# Настройки почты. Для отправки confirm_code из app.autorization
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+DEFAULT_FROM_EMAIL = 'jobpavlenko@yandex.ru'
 # Database
 
 DATABASES = {
@@ -145,3 +149,10 @@ SIMPLE_JWT = {
 USER = 'user'
 MODERATOR = 'moderator'
 ADMIN = 'admin'
+
+
+# app.autorization send_mail_confirmation_code()
+MIN_CONFIRMATION_CODE = 100000
+MAX_CONFIRMATION_CODE = 999999
+# НеверныйOrderedDict
+SIGN_UP_USER_INDEX = 0
