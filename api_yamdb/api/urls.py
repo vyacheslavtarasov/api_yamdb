@@ -8,7 +8,7 @@ from api.views import (
     GenreViewSet,
     signup_cust,
     CategoryViewSet,
-
+    TitlesViewSet,
 )
 
 app_name = "api"
@@ -24,6 +24,7 @@ router.register(
 )
 router.register(r"genres", GenreViewSet, basename="genre")
 router.register(r"categories", CategoryViewSet, basename="category")
+router.register(r"titles", TitlesViewSet, basename="title")
 
 urlpatterns = [
     path("v1/", include(router.urls)),
