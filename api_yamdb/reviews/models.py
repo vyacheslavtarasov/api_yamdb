@@ -2,6 +2,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from reviews.validators import UsernameValidatorRegex, username_me
+
 
 class User(AbstractUser):
     """Модель переопределенного юзера."""
@@ -12,6 +14,7 @@ class User(AbstractUser):
     ]
     username = models.CharField(
         'Имя пользователя',
+        validators=(UsernameValidatorRegex(), username_me),
         max_length=150,
         unique=True,
         # validators=[username_validator],

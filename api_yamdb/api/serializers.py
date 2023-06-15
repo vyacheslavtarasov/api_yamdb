@@ -1,7 +1,7 @@
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
-# from django.http import HTTP 
+# from django.http import HTTP
 
 from reviews.models import (
     Review,
@@ -9,8 +9,9 @@ from reviews.models import (
     Genre,
     User,
     Category,
-
+    username_me
 )
+from reviews.validators import UsernameValidatorRegex
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -21,16 +22,12 @@ class SignUpSerializer(serializers.ModelSerializer):
     )
     username = serializers.CharField(
         required=True,
-        # validators=[UsernameRegexValidator(), ]
+        validators=[UsernameValidatorRegex(), ]
     )
 
-    def username_me(value):
+    def validate_username(self, value):
         """Проверка имени пользователя (me недопустимое имя)."""
-        if value == 'me':
-            raise ValidationError(
-                'Имя пользователя "me" не разрешено.'
-            )
-        return value
+        return username_me(value)
 
     class Meta:
         model = User
