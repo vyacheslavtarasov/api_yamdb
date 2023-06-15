@@ -17,6 +17,8 @@ from authorization.send_confirmation_code import send_mail_code
 # from django_filters.rest_framework import DjangoFilterBackend
 
 
+from api.permissions import IsAuthor
+
 from reviews.models import (
     Review,
     Comments,
@@ -85,6 +87,8 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     pagination_class = PageNumberPagination
 
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor) 
+
     def get_queryset(self):
         new_queryset = Review.objects.filter(title_id=self.kwargs.get("title_id"))
         return new_queryset
@@ -105,10 +109,11 @@ class ReviewsViewSet(viewsets.ModelViewSet):
 class CommentsViewSet(viewsets.ModelViewSet):
     serializer_class = CommentsSerializer
 
-    pagination_class = PageNumberPagination 
+    pagination_class = PageNumberPagination
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor)
 
     def get_queryset(self):
-        print(self.kwargs.get("review_id"))
+        # print(self.kwargs.get("review_id"))
         new_queryset = Comments.objects.filter(review_id=self.kwargs.get("review_id"))
         return new_queryset
     
