@@ -6,10 +6,7 @@ from api.views import (
     ReviewsViewSet,
     CommentsViewSet,
     GenreViewSet,
-
-    signup_cust
-
-
+    signup_cust,
     CategoryViewSet,
 
 )
