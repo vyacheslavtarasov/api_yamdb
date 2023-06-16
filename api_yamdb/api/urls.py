@@ -9,7 +9,7 @@ from api.views import (
     signup_cust,
     CategoryViewSet,
     get_token,
-    UsersViewSet,
+    UserViewSet,
     TitleViewSet,
 
 )
@@ -18,7 +18,7 @@ from api.views import (
 app_name = "api"
 
 router = routers.DefaultRouter(trailing_slash=True)
-router.register(r'users', UsersViewSet, basename='users')
+router.register(r"users", UserViewSet, basename='users')
 router.register(
     r"titles/(?P<title_id>\d+)/reviews", ReviewsViewSet, basename="reviews"
 )

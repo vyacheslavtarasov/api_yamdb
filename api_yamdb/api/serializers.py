@@ -9,7 +9,7 @@ from reviews.models import (
     Genre,
     User,
     Category,
-    username_me,
+    # username_me,
     Title,
 )
 from reviews.validators import UsernameValidatorRegex, username_me
@@ -59,17 +59,12 @@ class TokenSerializer(serializers.ModelSerializer):
         return username_me(value)
 
 
-class UsersSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'role',
-            'bio',
-        )
+            'username', 'email', 'first_name',
+            'last_name', 'bio', 'role')
 
 
 class UserMeSerializer(serializers.ModelSerializer):
@@ -78,19 +73,12 @@ class UserMeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'bio',
-            'role'
-        )
+            'username', 'email', 'first_name',
+            'last_name', 'bio', 'role')
+        read_only_fields = ('role',)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-
-    
- 
 
     author = serializers.SlugRelatedField(
         read_only=True, slug_field="username"
