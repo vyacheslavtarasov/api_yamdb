@@ -100,7 +100,7 @@ class Genre(models.Model):
         return self.name
 
 
-class Titles(models.Model):
+class Title(models.Model):
     """Модель произведений. Произведения, к которым пишут
     отзывы (определённый фильм, книга или песенка)."""
     name = models.CharField(
@@ -119,7 +119,7 @@ class Titles(models.Model):
     )
     genre = models.ManyToManyField(
         Genre,
-        related_name='titles',
+        related_name='title',
         verbose_name='Жанр'
     )
 
@@ -134,8 +134,8 @@ class Titles(models.Model):
 class Review(models.Model):
     """Отзывы на произведения.
     Отзыв привязан к определённому произведению."""
-    title_id = models.ForeignKey(
-        Titles,
+    title = models.ForeignKey(
+        Title,
         on_delete=models.CASCADE,
         related_name="reviews"
     )
@@ -151,7 +151,7 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Ревью'
         verbose_name_plural = 'Ревью'
-        unique_together = (("title_id", "author"),)
+        unique_together = (("title", "author"),)
 
     def __str__(self):
         return self.text

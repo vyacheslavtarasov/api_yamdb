@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Genre, Titles, Review, Comments, User
+from .models import Category, Genre, Title, Review, Comments, User
 
 
 class CommentsAdmin(admin.ModelAdmin):
@@ -27,7 +27,7 @@ class GenreAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Genre._meta.get_fields()]
 
 
-class TitlesAdmin(admin.ModelAdmin):
+class TitleAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "year",
@@ -38,7 +38,7 @@ class TitlesAdmin(admin.ModelAdmin):
 
 class ReviewAdmin(admin.ModelAdmin):
     list_display = (
-        "title_id",
+        "title",
         "text",
         "author",
         "score",
@@ -48,7 +48,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Genre, GenreAdmin)
-admin.site.register(Titles, TitlesAdmin)
+admin.site.register(Title, TitleAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Comments, CommentsAdmin)
 admin.site.register(User, UserAdmin)
