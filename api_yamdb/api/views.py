@@ -1,5 +1,10 @@
 
+import action
+from rest_framework.decorators import action, permission_classes
+
+
 from rest_framework.decorators import action
+
 # from django import views
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
@@ -20,7 +25,7 @@ from rest_framework.filters import SearchFilter
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import AccessToken
 
 from authorization.send_confirmation_code import send_mail_code
@@ -31,6 +36,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from api.permissions import (IsAuthor,
                              IsAdminOrReadOnly,
+
                              )
 
 from reviews.models import (
@@ -60,6 +66,7 @@ from api.serializers import (
 
 
 @api_view(['POST'])
+# @permission_classes([IsAuthor])
 def signup_cust(request):
     """Регистрация пользователя."""
     serializer = SignUpSerializer(data=request.data)
@@ -107,6 +114,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(methods=['GET', 'PATCH'],
             detail=False,
+            url_path='me',
             permission_classes=[permissions.IsAuthenticated]
             )
     def get_patch_me(self, request):

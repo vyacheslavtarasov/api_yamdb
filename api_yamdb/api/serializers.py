@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 from rest_framework import serializers
 # from django.http import HTTP
+from reviews.validators import UsernameValidatorRegex
 
 from reviews.models import (
     Review,
