@@ -13,11 +13,10 @@ class User(AbstractUser):
         ('admin', 'admin'),
     ]
     username = models.CharField(
-        'Имя пользователя',
+
         validators=(UsernameValidatorRegex(), username_me),
         max_length=150,
         unique=True,
-        # validators=[username_validator],
     )
     first_name = models.CharField(max_length=150, null=True)
     last_name = models.CharField(max_length=150, null=True)
@@ -42,8 +41,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['email']
     USERNAME_FIELDS = 'email'
 
-    def __str__(self):
-        return str(self.username)
+    # def __str__(self):
+    #     return str(self.username)
 
     @property
     def is_admin(self):
@@ -56,6 +55,13 @@ class User(AbstractUser):
     @property
     def is_user(self):
         return self.role == "user"
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return str(self.username)
 
 
 class Category(models.Model):
