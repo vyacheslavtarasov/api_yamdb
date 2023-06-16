@@ -1,5 +1,5 @@
-# from django.core.exceptions import ValidationError
-from rest_framework.validators import UniqueValidator
+from django.core.exceptions import ValidationError
+from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 from rest_framework import serializers
 # from django.http import HTTP
 
@@ -10,7 +10,7 @@ from reviews.models import (
     User,
     Category,
     username_me,
-    Titles,
+    Title,
 )
 from reviews.validators import UsernameValidatorRegex, username_me
 
@@ -89,11 +89,14 @@ class UserMeSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
 
+    
+ 
+
     author = serializers.SlugRelatedField(
         read_only=True, slug_field="username"
     )
 
-    title_id = serializers.SlugRelatedField(
+    title = serializers.SlugRelatedField(
         read_only=True, slug_field="id"
     )
 
@@ -131,7 +134,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['name', 'slug']
 
 
-class TitlesReadSerializer(serializers.ModelSerializer):
+class TitleReadSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(
         read_only=True,
@@ -141,10 +144,10 @@ class TitlesReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = '__all__'
-        model = Titles
+        model = Title
 
 
-class TitlesWriteSerializer(serializers.ModelSerializer):
+class TitleWriteSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
@@ -157,4 +160,4 @@ class TitlesWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = '__all__'
-        model = Titles
+        model = Title

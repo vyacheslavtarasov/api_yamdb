@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
+from rest_framework.exceptions import ValidationError
 
 from rest_framework import filters, viewsets, status, permissions
 from rest_framework.filters import SearchFilter
@@ -27,7 +28,7 @@ from api.permissions import (IsAuthor,
 from reviews.models import (
     Review,
     Comments,
-    Titles,
+    Title,
     User,
     Genre,
     Category,
@@ -41,8 +42,8 @@ from api.serializers import (
     SignUpSerializer,
     CategorySerializer,
     TokenSerializer,
-    TitlesReadSerializer,
-    TitlesWriteSerializer,
+    TitleReadSerializer,
+    TitleWriteSerializer,
     UsersSerializer,
     UserMeSerializer,
 
@@ -121,21 +122,25 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     pagination_class = PageNumberPagination
 
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor) 
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor)
+    # permission_classes = (MyPermission,) 
 
     def get_queryset(self):
-        new_queryset = Review.objects.filter(title_id=self.kwargs.get("title_id"))
+        new_queryset = Review.objects.filter(title=self.kwargs.get("title_id"))
         return new_queryset
 
     def perform_create(self, serializer):
+        user = User.objects.get(username=self.request.user)
+        if Review.objects.filter(title=self.kwargs.get("title_id"), author=user.id).exists():
+            raise ValidationError("entry is already exist.")
         serializer.save(
-            title_id=get_object_or_404(Titles, id=self.kwargs.get("title_id")),
+            title=get_object_or_404(Title, id=self.kwargs.get("title_id")),
             author=get_object_or_404(User, username=self.request.user),
         )
 
     def perform_update(self, serializer):
         serializer.save(
-            title_id=get_object_or_404(Titles, id=self.kwargs.get("title_id")),
+            title=get_object_or_404(Title, id=self.kwargs.get("title_id")),
             author=get_object_or_404(User, username=self.request.user),
         )
 
@@ -189,17 +194,17 @@ class CategoryViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
 
 
-class TitlesViewSet(viewsets.ModelViewSet):
+class TitleViewSet(viewsets.ModelViewSet):
     """
     Получить список всех объектов.
     """
-    #queryset = Titles.objects.annotate(rating=Avg("reviews__score"))
-    queryset = Titles.objects.all()
+    #queryset = Title.objects.annotate(rating=Avg("reviews__score"))
+    queryset = Title.objects.all()
     #permission_classes = (IsAdminUserOrReadOnly, )
     # filter_backends = (DjangoFilterBackend, OrderingFilter)
     ordering_fields = ("name",)
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
-            return TitlesReadSerializer
-        return TitlesWriteSerializer
+            return TitleReadSerializer
+        return TitleWriteSerializer
