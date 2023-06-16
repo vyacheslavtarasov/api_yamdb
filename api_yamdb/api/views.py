@@ -1,9 +1,14 @@
+import action
+from rest_framework.decorators import action
+# from django import views
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets, mixins
 
-from rest_framework import filters, viewsets, status, permissions
+from rest_framework import (
+    filters, viewsets, status, permissions)
+
 from rest_framework.filters import SearchFilter
 from api.permissions import IsAuthor
 
@@ -14,11 +19,12 @@ from rest_framework.filters import SearchFilter
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-# from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import AccessToken
+
 from authorization.send_confirmation_code import send_mail_code
 
-# from django.db.models import Avg
+from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -45,7 +51,7 @@ from api.serializers import (
     TokenSerializer,
     TitleReadSerializer,
     TitleWriteSerializer,
-    UsersSerializer,
+    UserSerializer,
     UserMeSerializer,
 
 )
@@ -90,22 +96,18 @@ def get_token(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UsersViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all
-    serializer_class = UsersSerializer
-    pagination_class = PageNumberPagination
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     permission_classes = (IsAdminOrReadOnly, )
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    filterset_fields = ('username')
     search_fields = ('username', )
     lookup_field = 'username'
 
-    # @action(
-    #     methods=['GET', 'PATCH'],
-    #     detail=False,
-    #     permission_classes=[permissions.IsAuthenticated]
-    # )
-
+    @action(methods=['GET', 'PATCH'],
+            detail=False,
+            permission_classes=[permissions.IsAuthenticated]
+            )
     def get_patch_me(self, request):
         user = get_object_or_404(User, username=self.request.user)
         if request.method == 'GET':
