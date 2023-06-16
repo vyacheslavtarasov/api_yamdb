@@ -59,6 +59,34 @@ class TokenSerializer(serializers.ModelSerializer):
         return username_me(value)
 
 
+class UsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'role',
+            'bio',
+        )
+
+
+class UserMeSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role'
+        )
+
+
 class ReviewSerializer(serializers.ModelSerializer):
 
     author = serializers.SlugRelatedField(

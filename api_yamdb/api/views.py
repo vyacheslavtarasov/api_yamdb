@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 
-from rest_framework import viewsets, status, permissions
+from rest_framework import filters, viewsets, status, permissions
 from rest_framework.filters import SearchFilter
 from api.permissions import IsAuthor
 
 from rest_framework import viewsets, status
+from rest_framework.pagination import PageNumberPagination
+
 from rest_framework.filters import SearchFilter
 
 from rest_framework.decorators import api_view
@@ -15,10 +17,12 @@ from rest_framework_simplejwt.tokens import AccessToken
 from authorization.send_confirmation_code import send_mail_code
 
 # from django.db.models import Avg
-# from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-from api.permissions import IsAuthor
+from api.permissions import (IsAuthor,
+                             IsAdminOrReadOnly,
+                             )
 
 from reviews.models import (
     Review,
@@ -36,11 +40,11 @@ from api.serializers import (
     GenreSerializer,
     SignUpSerializer,
     CategorySerializer,
-
     TokenSerializer,
-
     TitlesReadSerializer,
     TitlesWriteSerializer,
+    UsersSerializer,
+    UserMeSerializer,
 
 )
 # from .permissions import IsAdminUserOrReadOnly
@@ -82,6 +86,35 @@ def get_token(request):
         return Response({'token((JWT-токен))': token},
                         status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UsersViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all
+    serializer_class = UsersSerializer
+    pagination_class = PageNumberPagination
+    permission_classes = (IsAdminOrReadOnly, )
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filterset_fields = ('username')
+    search_fields = ('username', )
+    lookup_field = 'username'
+
+    # @action(
+    #     methods=['GET', 'PATCH'],
+    #     detail=False,
+    #     permission_classes=[permissions.IsAuthenticated]
+    # )
+
+    def get_patch_me(self, request):
+        user = get_object_or_404(User, username=self.request.user)
+        if request.method == 'GET':
+            serializer = UserMeSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        if request.method == 'PATCH':
+            serializer = UserMeSerializer(
+                user, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):
