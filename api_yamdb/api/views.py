@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
+from rest_framework import viewsets, mixins
 
 from rest_framework import filters, viewsets, status, permissions
 from rest_framework.filters import SearchFilter
@@ -169,29 +170,34 @@ class CommentsViewSet(viewsets.ModelViewSet):
         )
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreViewSet(mixins.CreateModelMixin,
+                                mixins.ListModelMixin,
+                                mixins.DestroyModelMixin,
+                                viewsets.GenericViewSet):
     """
     Получить список всех жанров.
     """
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    #permission_classes = (IsAdminUserOrReadOnly,)
+
     filter_backends = (SearchFilter,)
     search_fields = ('name', )
     lookup_field = 'slug'
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(mixins.CreateModelMixin,
+                                mixins.ListModelMixin,
+                                mixins.DestroyModelMixin,
+                                viewsets.GenericViewSet):
     """
     Получить список всех категорий.
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     pagination_class = PageNumberPagination
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor)
-    #permission_classes = (IsAdminUserOrReadOnly,)
     filter_backends = (SearchFilter, )
     lookup_field = 'slug'
+    search_fields = ("name",)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
