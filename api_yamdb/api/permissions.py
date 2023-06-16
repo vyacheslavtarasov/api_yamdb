@@ -14,7 +14,10 @@ class IsAuthor(permissions.BasePermission):
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """Разрешение на уровне админ. Права для работы с пользователями"""
-    def has_permission(self, request, view):
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_authenticated:
+            if request.user.role == 'admin':
+                return True
         return (
             request.method in permissions.SAFE_METHODS
             or (
