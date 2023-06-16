@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets, mixins
+from django.db.models import Avg
 
 from rest_framework import filters, viewsets, status, permissions
 from rest_framework.filters import SearchFilter
@@ -18,8 +19,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 from authorization.send_confirmation_code import send_mail_code
 
-# from django.db.models import Avg
+from django.db.models import CharField, Value, IntegerField
 from django_filters.rest_framework import DjangoFilterBackend
+
 
 
 from api.permissions import (IsAuthor,
@@ -205,11 +207,10 @@ class TitleViewSet(viewsets.ModelViewSet):
     """
     Получить список всех объектов.
     """
-    #queryset = Title.objects.annotate(rating=Avg("reviews__score"))
-    queryset = Title.objects.all()
 
     def get_queryset(self):
-        queryset = Title.objects.all()
+
+        queryset = Title.objects.annotate(rating=Avg("reviews__score"))
 
         slug = self.request.query_params.get('genre')
         if slug is not None:
