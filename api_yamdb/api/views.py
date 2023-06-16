@@ -179,7 +179,7 @@ class GenreViewSet(mixins.CreateModelMixin,
     """
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (SearchFilter,)
     search_fields = ('name', )
     lookup_field = 'slug'
@@ -195,6 +195,7 @@ class CategoryViewSet(mixins.CreateModelMixin,
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     pagination_class = PageNumberPagination
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (SearchFilter, )
     lookup_field = 'slug'
     search_fields = ("name",)
