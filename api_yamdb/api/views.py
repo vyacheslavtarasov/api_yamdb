@@ -207,7 +207,35 @@ class TitleViewSet(viewsets.ModelViewSet):
     """
     #queryset = Title.objects.annotate(rating=Avg("reviews__score"))
     queryset = Title.objects.all()
-    #permission_classes = (IsAdminUserOrReadOnly, )
+
+    def get_queryset(self):
+        queryset = Title.objects.all()
+
+        slug = self.request.query_params.get('genre')
+        if slug is not None:
+            genres = Genre.objects.filter(slug=slug)
+            queryset = Title.objects.filter(genre__in=genres)
+            return queryset
+
+        slug = self.request.query_params.get('category')
+        if slug is not None:
+            categories = Category.objects.filter(slug=slug)
+            queryset = Title.objects.filter(category__in=categories)
+            return queryset
+        
+        year = self.request.query_params.get('year')
+        if year is not None:
+            queryset = Title.objects.filter(year=year)
+            return queryset
+        
+        name = self.request.query_params.get('name')
+        if name is not None:
+            queryset = Title.objects.filter(name=name)
+            return queryset
+        
+        return queryset
+
+    permission_classes = (IsAdminOrReadOnly,)
     # filter_backends = (DjangoFilterBackend, OrderingFilter)
     ordering_fields = ("name",)
 
