@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Genre, Title, Review, Comments, User
+from .models import Category, Comments, Genre, Review, Title, User
 
 
 class CommentsAdmin(admin.ModelAdmin):
@@ -8,12 +8,7 @@ class CommentsAdmin(admin.ModelAdmin):
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "username",
-        "bio",
-        "role"
-    )
+    list_display = ("id", "username", "bio", "role")
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -28,22 +23,11 @@ class GenreAdmin(admin.ModelAdmin):
 
 
 class TitleAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "year",
-        "category",
-        "description"
-    )
+    list_display = ("name", "year", "category", "description")
 
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = (
-        "title",
-        "text",
-        "author",
-        "score",
-        "pub_date"
-    )
+    list_display = ("title", "text", "author", "score", "pub_date")
 
 
 admin.site.register(Category, CategoryAdmin)

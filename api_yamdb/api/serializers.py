@@ -1,60 +1,47 @@
-from django.core.exceptions import ValidationError
-from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 from rest_framework import serializers
-# from django.http import HTTP
-from reviews.validators import UsernameValidatorRegex
+from rest_framework.validators import UniqueValidator
 
-from reviews.models import (
-    Review,
-    Comments,
-    Genre,
-    User,
-    Category,
-    # username_me,
-    Title,
-)
+from reviews.models import Category, Comments, Genre, Review, Title, User
 from reviews.validators import UsernameValidatorRegex, username_me
 
 
 class SignUpSerializer(serializers.ModelSerializer):
     """Сериализатор формы регистрации.POST-запрос: username и email."""
+
     email = serializers.EmailField(
         max_length=150,
         required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
+        validators=[UniqueValidator(queryset=User.objects.all())],
     )
     username = serializers.CharField(
         max_length=150,
         required=True,
-        validators=[UsernameValidatorRegex(), ]
+        validators=[
+            UsernameValidatorRegex(),
+        ],
     )
 
     def validate(self, data):
-        if data['username'] == 'me':
-            raise serializers.ValidationError('Нельзя использовать логин me')
+        if data["username"] == "me":
+            raise serializers.ValidationError("Нельзя использовать логин me")
         return data
-
-    # def validate_username(self, value):
-    #     """Проверка имени пользователя (me недопустимое имя)."""
-    #     return username_me(value)
 
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ("username", "email")
 
 
 class TokenSerializer(serializers.ModelSerializer):
     """Сериализатор получения JWT-токена."""
+
     username = serializers.CharField(
-        max_length=150,
-        required=True,
-        validators=(UsernameValidatorRegex(), )
+        max_length=150, required=True, validators=(UsernameValidatorRegex(),)
     )
     confirmation_code = serializers.CharField(required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'confirmation_code')
+        fields = ("username", "confirmation_code")
 
     def validate_username(self, value):
         return username_me(value)
@@ -64,8 +51,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'first_name',
-            'last_name', 'bio', 'role')
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "bio",
+            "role",
+        )
 
 
 class UserMeSerializer(serializers.ModelSerializer):
@@ -74,20 +66,22 @@ class UserMeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'first_name',
-            'last_name', 'bio', 'role')
-        read_only_fields = ('role',)
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "bio",
+            "role",
+        )
+        read_only_fields = ("role",)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-
     author = serializers.SlugRelatedField(
         read_only=True, slug_field="username"
     )
 
-    title = serializers.SlugRelatedField(
-        read_only=True, slug_field="id"
-    )
+    title = serializers.SlugRelatedField(read_only=True, slug_field="id")
 
     class Meta:
         fields = "__all__"
@@ -95,14 +89,11 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class CommentsSerializer(serializers.ModelSerializer):
-
     author = serializers.SlugRelatedField(
         read_only=True, slug_field="username"
     )
 
-    review_id = serializers.SlugRelatedField(
-        read_only=True, slug_field="id"
-    )
+    review_id = serializers.SlugRelatedField(read_only=True, slug_field="id")
 
     class Meta:
         fields = "__all__"
@@ -111,42 +102,34 @@ class CommentsSerializer(serializers.ModelSerializer):
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
-        # fields = "__all__"
         model = Genre
-        fields = ['name', 'slug']
+        fields = ["name", "slug"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        # fields = "__all__"
         model = Category
-        fields = ['name', 'slug']
+        fields = ["name", "slug"]
 
 
 class TitleReadSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
-    genre = GenreSerializer(
-        read_only=True,
-        many=True
-    )
+    genre = GenreSerializer(read_only=True, many=True)
     rating = serializers.IntegerField(read_only=True)
 
     class Meta:
-        fields = '__all__'
+        fields = "__all__"
         model = Title
 
 
 class TitleWriteSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
-        queryset=Category.objects.all(),
-        slug_field='slug'
+        queryset=Category.objects.all(), slug_field="slug"
     )
     genre = serializers.SlugRelatedField(
-        queryset=Genre.objects.all(),
-        slug_field='slug',
-        many=True
+        queryset=Genre.objects.all(), slug_field="slug", many=True
     )
 
     class Meta:
-        fields = '__all__'
+        fields = "__all__"
         model = Title
