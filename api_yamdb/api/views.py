@@ -2,7 +2,6 @@
 import action
 from rest_framework.decorators import action, permission_classes
 
-
 from rest_framework.decorators import action
 
 # from django import views
@@ -36,7 +35,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from api.permissions import (IsAuthor,
                              IsAdminOrReadOnly,
-
+                             TestPermission
                              )
 
 from reviews.models import (
@@ -107,15 +106,21 @@ def get_token(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminOrReadOnly, )
+    permission_classes = (IsAdminOrReadOnly,
+                          )
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     search_fields = ('username', )
     lookup_field = 'username'
 
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return (TestPermission(),)
+        return super().get_permissions() 
+
     @action(methods=['GET', 'PATCH'],
             detail=False,
             url_path='me',
-            permission_classes=[permissions.IsAuthenticated]
+            permission_classes=[permissions.IsAuthenticated,]
             )
     def get_patch_me(self, request):
         user = get_object_or_404(User, username=self.request.user)

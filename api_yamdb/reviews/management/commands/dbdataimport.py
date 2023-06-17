@@ -16,7 +16,7 @@ import_template = [
         [],
         [],
     ),
-    ("genre_title", "reviews_titles_genre", {"title": "titles_id"}, [], []),
+    ("genre_title", "reviews_title_genre", {"title": "titles_id"}, [], []),
     ("genre", "reviews_genre", {}, [], []),
     (
         "review",
@@ -29,7 +29,7 @@ import_template = [
         [],
     ),
     (
-        "title",
+        "titles",
         "reviews_title",
         {"category": "category_id"},
         [("description", "change_me"),],
