@@ -4,7 +4,10 @@ from rest_framework import permissions
 class IsAuthor(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated:
-            if request.user.role == 'admin' or request.user.role == 'moderator':
+            if (
+                request.user.role == "admin"
+                or request.user.role == "moderator"
+            ):
                 return True
         return (
             request.method in permissions.SAFE_METHODS
@@ -14,16 +17,13 @@ class IsAuthor(permissions.BasePermission):
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """Разрешение на уровне админ. Права для работы с пользователями"""
+
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated:
-            if request.user.role == 'admin':
+            if request.user.role == "admin":
                 return True
-        return (
-            request.method in permissions.SAFE_METHODS
-            or (
-                request.user.is_authenticated
-                and request.user.is_admin
-            )
+        return request.method in permissions.SAFE_METHODS or (
+            request.user.is_authenticated and request.user.is_admin
         )
 
 
@@ -32,6 +32,7 @@ class IsAuthorOrModeratorOrAdminOrReadOnly(
 ):
     """Права для работы с отзывами и комментариями.
     User, Moderator, Admin"""
+
     def has_object_permission(self, request, view, obj):
         return (
             request.method in permissions.SAFE_METHODS
@@ -44,14 +45,16 @@ class IsAuthorOrModeratorOrAdminOrReadOnly(
 class IsAdminOrReadOnly(permissions.BasePermission):
     """Права для работы с категориями и жанрами.
     User"""
+
     def has_permission(self, request, view):
         return (
             request.method in permissions.SAFE_METHODS
             or request.user.is_authenticated
             and request.user.is_admin
         )
-    
-class TestPermission(permissions.BasePermission):
+
+
+class IsAdmitOrGetOut(permissions.BasePermission):
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False

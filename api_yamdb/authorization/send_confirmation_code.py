@@ -8,14 +8,14 @@ random = secrets.SystemRandom()
 
 def send_mail_code(data):
     """Отправка на почту сгенерированного рандомного кода."""
-    email = data['email']
+    email = data["email"]
     confirmation_code = random.randint(
         settings.MIN_CONFIRMATION_CODE,
         settings.MAX_CONFIRMATION_CODE,
     )
     send_mail(
-        'Код потвержения:',
-        f'Ваш код подтверждения {confirmation_code}',
+        "Код потвержения:",
+        f"Ваш код подтверждения {confirmation_code}",
         settings.DEFAULT_FROM_EMAIL,
         [email],
         fail_silently=True

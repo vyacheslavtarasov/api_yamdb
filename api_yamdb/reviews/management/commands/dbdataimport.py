@@ -1,8 +1,8 @@
-from django.core.management.base import BaseCommand
-import pandas
 import sqlite3
 
+import pandas
 from django import db
+from django.core.management.base import BaseCommand
 
 import_template = [
     ("category", "reviews_category", {}, [], []),
@@ -32,7 +32,9 @@ import_template = [
         "titles",
         "reviews_title",
         {"category": "category_id"},
-        [("description", "change_me"),],
+        [
+            ("description", "change_me"),
+        ],
         [],
     ),
     (
@@ -52,13 +54,13 @@ import_template = [
     ),
 ]
 
+
 class Command(BaseCommand):
-    help = 'Import data from local csv files into database.'
+    help = "Import data from local csv files into database."
 
     def handle(self, *args, **kwargs):
+        db_path = db.utils.settings.DATABASES["default"]["NAME"]
 
-        db_path = db.utils.settings.DATABASES['default']['NAME']
-        
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
 
