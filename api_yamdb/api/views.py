@@ -106,6 +106,7 @@ def get_token(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    http_method_names = ['get', 'post', 'patch', 'delete']
     permission_classes = (IsAdminOrReadOnly,
                           )
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
@@ -158,7 +159,7 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         serializer.save(
             title=get_object_or_404(Title, id=self.kwargs.get("title_id")),
-            author=get_object_or_404(User, username=self.request.user),
+            # author=get_object_or_404(User, username=self.request.user),
         )
 
 
