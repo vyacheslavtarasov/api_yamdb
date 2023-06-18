@@ -10,7 +10,7 @@ import_template = [
         "comments",
         "reviews_comments",
         {
-            "review_id": "review_id_id",
+            "review": "review_id",
             "author": "author_id",
         },
         [],

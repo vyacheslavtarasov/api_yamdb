@@ -105,7 +105,7 @@ class Comments(models.Model):
     """Комментарии к отзывам.
     Комментарий привязан к определённому отзыву."""
 
-    review_id = models.ForeignKey(
+    review = models.ForeignKey(
         Review, on_delete=models.CASCADE, related_name="reviews"
     )
     text = models.TextField()
