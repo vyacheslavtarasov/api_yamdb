@@ -9,3 +9,4 @@ pytest-pythonpath==0.7.3
 django-filter==23.2
 action==1.4.4
 django-import-export
+python-dotenv
