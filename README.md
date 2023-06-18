@@ -61,6 +61,6 @@ http://127.0.0.1:8000/api/v1/users/ - Создание пользователя 
 ```
 ## Технологии
 
-- []()
-- []()
+- [Vyacheslav Tarasov](https://github.com/vyacheslavtarasov)
+- [Dmitry Pavlenko](https://github.com/DPavlen)
 - [Chigina Ekaterina](https://github.com/ekaterinachigina)
