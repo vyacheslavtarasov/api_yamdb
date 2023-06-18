@@ -10,7 +10,6 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from authorization.send_confirmation_code import send_mail_code
 from api.filters import TitleFilter
 from api.permissions import IsAdminOrReadOnly, IsAdmitOrGetOut, IsAuthor
 from api.serializers import (
@@ -25,6 +24,7 @@ from api.serializers import (
     UserMeSerializer,
     UserSerializer,
 )
+from authorization.send_confirmation_code import send_mail_code
 from reviews.models import Category, Comments, Genre, Review, Title, User
 from user.models import User
 

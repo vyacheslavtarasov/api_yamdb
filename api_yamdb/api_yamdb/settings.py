@@ -1,14 +1,15 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs"
+SECRET_KEY = os.getenv('SECRET_KEY', "p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
 ALLOWED_HOSTS = ["*"]
 
@@ -21,24 +22,18 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
-    # 'api.apps.ApiConfig',
-    # 'reviews.apps.ReviewsConfig',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # Добавили DRF for API & auth token
     "rest_framework",
     "rest_framework_simplejwt",
     "user",
-    # 'djoser',
-    # Добавили приложения
     "reviews",
     "api",
     "import_export",
-    # Добавим и его нужно установить pip
     'django_filters'
 ]
 

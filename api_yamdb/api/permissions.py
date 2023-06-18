@@ -7,39 +7,12 @@ class IsAuthor(permissions.BasePermission):
         if request.user.is_authenticated:
             if (
                 request.user.role == User.RoleChoises.ADMIN
-                or request.user.role == "moderator"
+                or request.user.role == User.RoleChoises.MODERATOR
             ):
                 return True
         return (
             request.method in permissions.SAFE_METHODS
             or obj.author == request.user
-        )
-
-
-class IsAdminOrReadOnly(permissions.BasePermission):
-    """Разрешение на уровне админ. Права для работы с пользователями"""
-
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_authenticated:
-            if request.user.role == "admin":
-                return True
-        return request.method in permissions.SAFE_METHODS or (
-            request.user.is_authenticated and request.user.is_admin
-        )
-
-
-class IsAuthorOrModeratorOrAdminOrReadOnly(
-    permissions.IsAuthenticatedOrReadOnly
-):
-    """Права для работы с отзывами и комментариями.
-    User, Moderator, Admin"""
-
-    def has_object_permission(self, request, view, obj):
-        return (
-            request.method in permissions.SAFE_METHODS
-            or obj.author == request.user
-            or request.user.is_moderator
-            or request.user.is_admin
         )
 
 
