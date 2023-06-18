@@ -4,7 +4,7 @@ from .models import Category, Comments, Genre, Review, Title, User
 
 
 class CommentsAdmin(admin.ModelAdmin):
-    list_display = (field.name for field in Comments._meta.get_fields())
+    list_display = ("text", "author", "pub_date", "review_id")
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -19,7 +19,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class GenreAdmin(admin.ModelAdmin):
-    list_display = (field.name for field in Genre._meta.get_fields())
+    list_display = ("slug", "name")
 
 
 class TitleAdmin(admin.ModelAdmin):

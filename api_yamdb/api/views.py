@@ -12,11 +12,18 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from authorization.send_confirmation_code import send_mail_code
 from api.permissions import IsAdminOrReadOnly, IsAdmitOrGetOut, IsAuthor
-from api.serializers import (CategorySerializer, CommentsSerializer,
-                             GenreSerializer, ReviewSerializer,
-                             SignUpSerializer, TitleReadSerializer,
-                             TitleWriteSerializer, TokenSerializer,
-                             UserMeSerializer, UserSerializer)
+from api.serializers import (
+    CategorySerializer,
+    CommentsSerializer,
+    GenreSerializer,
+    ReviewSerializer,
+    SignUpSerializer,
+    TitleReadSerializer,
+    TitleWriteSerializer,
+    TokenSerializer,
+    UserMeSerializer,
+    UserSerializer,
+)
 from reviews.models import Category, Comments, Genre, Review, Title, User
 
 
@@ -117,21 +124,12 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor)
 
     def get_queryset(self):
-        return Review.objects.filter(
-            title=self.kwargs.get("title_id")
-        )
+        return Review.objects.filter(title=self.kwargs.get("title_id"))
 
     def perform_create(self, serializer):
-
-        title = get_object_or_404(Title, id=self.kwargs.get("title_id"))
-        author = get_object_or_404(User, username=self.request.user)
-        if Review.objects.filter(
-            title=title, author=author
-        ).exists():
-            raise ValidationError("entry is already exist.")
         serializer.save(
-            title=title,
-            author=author,
+            title=get_object_or_404(Title, id=self.kwargs.get("title_id")),
+            author=get_object_or_404(User, username=self.request.user),
         )
 
     def perform_update(self, serializer):
