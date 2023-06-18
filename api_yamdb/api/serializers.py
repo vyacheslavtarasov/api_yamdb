@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from reviews.models import Category, Comments, Genre, Review, Title, User
@@ -87,6 +88,16 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = Review
+
+    def validate(self, data):
+        user = self.context["request"].user
+        title_id = self.context["view"].kwargs.get("title_id")
+        if (
+            Review.objects.filter(title=title_id, author=user).exists()
+            and self.context["request"].method == "POST"
+        ):
+            raise ValidationError("Entry is already exist.")
+        return data
 
 
 class CommentsSerializer(serializers.ModelSerializer):

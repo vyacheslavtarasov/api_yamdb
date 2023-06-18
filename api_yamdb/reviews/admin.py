@@ -5,6 +5,7 @@ from import_export.admin import ImportExportModelAdmin
 from .models import Category, Comments, Genre, Review, Title
 
 
+
 class CategoryResource(resources.ModelResource):
     # list = (field.name for field in Comments._meta.get_fields())
     """CategoryResource от ModelResource из django-import-export.
@@ -20,6 +21,7 @@ class CategoryResource(resources.ModelResource):
         )
 
 
+
 class CategoryAdmin(ImportExportModelAdmin):
     """ Он регистрирует модель Category для использования в
     административной панели Django и определяет,
@@ -32,6 +34,7 @@ class CategoryAdmin(ImportExportModelAdmin):
         'name',
         'slug',
     )
+
 
 
 class GenreResource(resources.ModelResource):
