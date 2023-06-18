@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     "reviews",
     "api",
     "import_export",
+    # Добавим и его нужно установить pip
+    'django_filters'
 ]
 
 MIDDLEWARE = [

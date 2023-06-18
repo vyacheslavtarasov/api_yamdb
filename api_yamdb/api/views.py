@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
 from authorization.send_confirmation_code import send_mail_code
+from api.filters import TitleFilter
 from api.permissions import IsAdminOrReadOnly, IsAdmitOrGetOut, IsAuthor
 from api.serializers import (
     CategorySerializer,
@@ -209,37 +210,11 @@ class TitleViewSet(viewsets.ModelViewSet):
     """
     Получить список всех объектов.
     """
-
-    def get_queryset(self):
-        queryset = Title.objects.annotate(
-            rating=Avg("reviews__score")
-        ).order_by("id")
-
-        slug = self.request.query_params.get("genre")
-        if slug is not None:
-            genres = Genre.objects.filter(slug=slug)
-            queryset = Title.objects.filter(genre__in=genres)
-            return queryset
-
-        slug = self.request.query_params.get("category")
-        if slug is not None:
-            categories = Category.objects.filter(slug=slug)
-            queryset = Title.objects.filter(category__in=categories)
-            return queryset
-
-        year = self.request.query_params.get("year")
-        if year is not None:
-            queryset = Title.objects.filter(year=year)
-            return queryset
-
-        name = self.request.query_params.get("name")
-        if name is not None:
-            queryset = Title.objects.filter(name=name)
-            return queryset
-
-        return queryset
-
+    queryset = Title.objects.annotate(
+        rating=Avg("reviews__score")).order_by("id")
     permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = TitleFilter
     ordering_fields = ("name",)
 
     def get_serializer_class(self):
