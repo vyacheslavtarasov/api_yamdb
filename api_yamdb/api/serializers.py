@@ -3,7 +3,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from reviews.models import Category, Comments, Genre, Review, Title, User
-from reviews.validators import UsernameValidatorRegex, username_me
+from user.models import User
+from user.validators import UsernameValidatorRegex, username_me
 
 
 class SignUpSerializer(serializers.ModelSerializer):
