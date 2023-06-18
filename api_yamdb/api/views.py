@@ -1,10 +1,7 @@
-import action
-
 from django.db import IntegrityError
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.exceptions import ValidationError
@@ -24,7 +21,6 @@ from reviews.models import Category, Comments, Genre, Review, Title, User
 
 
 @api_view(["POST"])
-# @permission_classes([IsAuthor])
 def signup_cust(request):
     """Регистрация пользователя."""
 
@@ -119,23 +115,23 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
 
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthor)
-    # permission_classes = (MyPermission,)
 
     def get_queryset(self):
-        new_queryset = Review.objects.filter(
+        return Review.objects.filter(
             title=self.kwargs.get("title_id")
         )
-        return new_queryset
 
     def perform_create(self, serializer):
-        user = User.objects.get(username=self.request.user)
+
+        title = get_object_or_404(Title, id=self.kwargs.get("title_id"))
+        author = get_object_or_404(User, username=self.request.user)
         if Review.objects.filter(
-            title=self.kwargs.get("title_id"), author=user.id
+            title=title, author=author
         ).exists():
             raise ValidationError("entry is already exist.")
         serializer.save(
-            title=get_object_or_404(Title, id=self.kwargs.get("title_id")),
-            author=get_object_or_404(User, username=self.request.user),
+            title=title,
+            author=author,
         )
 
     def perform_update(self, serializer):

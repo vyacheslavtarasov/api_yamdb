@@ -65,11 +65,8 @@ class Command(BaseCommand):
         c = conn.cursor()
 
         for entry in import_template:
-            file_name = entry[0]
-            table_name = entry[1]
-            columns_to_rename = entry[2]
-            columns_to_add = entry[3]
-            columns_date_modification_type = entry[4]
+            (file_name, table_name, columns_to_rename,
+             columns_to_add, columns_date_modification_type) = entry
 
             c.execute(
                 f"DELETE FROM {table_name};",
