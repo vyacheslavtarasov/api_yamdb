@@ -105,7 +105,7 @@ class CommentsSerializer(serializers.ModelSerializer):
         read_only=True, slug_field="username"
     )
 
-    review_id = serializers.SlugRelatedField(read_only=True, slug_field="id")
+    review = serializers.SlugRelatedField(read_only=True, slug_field="id")
 
     class Meta:
         fields = "__all__"
