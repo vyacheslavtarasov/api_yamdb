@@ -18,6 +18,7 @@ from api.serializers import (CategorySerializer, CommentsSerializer,
                              TitleWriteSerializer, TokenSerializer,
                              UserMeSerializer, UserSerializer)
 from reviews.models import Category, Comments, Genre, Review, Title, User
+from user.models import User
 
 
 @api_view(["POST"])
@@ -76,7 +77,7 @@ class UserViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete"]
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    search_fields = ("username",)
+    search_fields = ("=username",)
     lookup_field = "username"
 
     def perform_create(self, serializer):

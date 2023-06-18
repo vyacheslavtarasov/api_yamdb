@@ -32,10 +32,12 @@ INSTALLED_APPS = [
     # Добавили DRF for API & auth token
     "rest_framework",
     "rest_framework_simplejwt",
+    "user",
     # 'djoser',
     # Добавили приложения
     "reviews",
     "api",
+    "import_export",
 ]
 
 MIDDLEWARE = [
@@ -137,7 +139,7 @@ REST_FRAMEWORK = {
 
 
 # Абстракция Usera для app reviews
-AUTH_USER_MODEL = "reviews.User"
+AUTH_USER_MODEL = "user.User"
 
 
 # Устанавливаем срок жизни токена

@@ -1,66 +1,7 @@
-from django.contrib.auth.models import AbstractUser
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from reviews.validators import UsernameValidatorRegex, username_me
-
-
-class User(AbstractUser):
-    """Модель переопределенного юзера."""
-
-    ROLE_CHOICES = [
-        ("user", "user"),
-        ("moderator", "moderator"),
-        ("admin", "admin"),
-    ]
-    username = models.CharField(
-        validators=(UsernameValidatorRegex(), username_me),
-        max_length=150,
-        unique=True,
-    )
-    first_name = models.CharField(max_length=150, null=True)
-    last_name = models.CharField(max_length=150, null=True)
-    email = models.EmailField(
-        blank=True,
-        max_length=254,
-        unique=True,
-        verbose_name="email address",
-    )
-    role = models.CharField(
-        verbose_name="Пользовательская роль",
-        choices=ROLE_CHOICES,
-        default="user",
-        max_length=50,
-    )
-    bio = models.TextField("Биография", null=True)
-    confirmation_code = models.CharField(
-        "Код подтверждения пользователя", max_length=100, null=True
-    )
-
-    REQUIRED_FIELDS = ["email"]
-    USERNAME_FIELDS = "email"
-
-    # def __str__(self):
-    #     return str(self.username)
-
-    @property
-    def is_admin(self):
-        return self.role == "admin" or self.is_superuser
-
-    @property
-    def is_moderator(self):
-        return self.role == "moderator"
-
-    @property
-    def is_user(self):
-        return self.role == "user"
-
-    class Meta:
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
-        ordering = ["-id"]
-
-    def __str__(self):
-        return str(self.username)
+from user.models import User
 
 
 class Category(models.Model):
@@ -169,7 +110,7 @@ class Comments(models.Model):
     )
     text = models.TextField()
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="users"
+        User, on_delete=models.CASCADE, related_name="user"
     )
     pub_date = models.DateTimeField(auto_now_add=True)
 
