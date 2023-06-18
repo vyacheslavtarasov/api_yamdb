@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from reviews.validators import UsernameValidatorRegex, username_me
 
@@ -144,7 +145,9 @@ class Review(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="reviews"
     )
-    score = models.IntegerField(choices=[(i, i) for i in range(1, 11)])
+    score = models.PositiveSmallIntegerField(
+        validators=(MaxValueValidator(10), MinValueValidator(1))
+    )
     pub_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -154,7 +157,7 @@ class Review(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
-        return self.text
+        return self.text[:30]
 
 
 class Comments(models.Model):

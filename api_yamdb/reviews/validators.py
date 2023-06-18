@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 from django.conf import settings
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -34,7 +34,7 @@ class UsernameValidatorRegex(UnicodeUsernameValidator):
 
 def validate_year(value):
     """Проверка на не превышение текущего года"""
-    if value >= datetime.now().year:
+    if value >= date.year():
         raise ValidationError(
             message=f"Введенный год {value} больше текущего!",
             params={"value": value},
