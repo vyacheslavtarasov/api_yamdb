@@ -31,7 +31,6 @@ class User(AbstractUser):
         # Определение полей из класса RoleChoises
         choices=RoleChoises.choices,
         default=RoleChoises.USER,
-        # default="user",
         max_length=50,
     )
     bio = models.TextField("Биография", null=True)
