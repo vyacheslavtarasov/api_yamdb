@@ -81,12 +81,12 @@ class Command(BaseCommand):
 
             if columns_to_add:
                 for column in columns_to_add:
-                    (name, default_value) = column
+                    name, default_value = column
                     df.insert(0, name, default_value)
 
             if columns_date_modification_type:
                 for column in columns_date_modification_type:
-                    (name, format) = column
+                    name, format = column
                     df[name] = pandas.to_datetime(df[name], format=format)
 
             df.to_sql(table_name, conn, if_exists="append", index=False)
