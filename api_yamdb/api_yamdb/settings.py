@@ -148,11 +148,6 @@ SIMPLE_JWT = {
 }
 
 
-# Пользовательские роли пользователей
-USER = "user"
-MODERATOR = "moderator"
-ADMIN = "admin"
-
 
 # app.autorization send_mail_confirmation_code()
 MIN_CONFIRMATION_CODE = 100000
